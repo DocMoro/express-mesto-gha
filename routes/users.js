@@ -21,4 +21,34 @@ router.post('/', (req, res) => {
     .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err}` }));
 });
 
+router.patch('/me', (req, res) => {
+  const { _id } = req.user;
+
+  if (req.body.name || req.body.link) {
+    User.findByIdAndUpdate(_id, req.body, {
+      new: true,
+      runValidators: true,
+    })
+      .then((user) => res.send({ data: user }))
+      .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err}` }));
+  } else {
+    res.status(400).send({ message: 'Запрос неверно сформирован' });
+  }
+});
+
+router.patch('/me/avatar', (req, res) => {
+  const { _id } = req.user;
+
+  if (req.body.avatar) {
+    User.findByIdAndUpdate(_id, req.body, {
+      new: true,
+      runValidators: true,
+    })
+      .then((user) => res.send({ data: user }))
+      .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err}` }));
+  } else {
+    res.status(400).send({ message: 'Запрос неверно сформирован' });
+  }
+});
+
 module.exports = router;
