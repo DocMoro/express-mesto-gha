@@ -3,13 +3,13 @@ const User = require('../models/user');
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((user) => res.send(user))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err}` }));
+    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
 };
 
 module.exports.getUserId = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => res.send(user))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err}` }));
+    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
 };
 
 module.exports.createUser = (req, res) => {
@@ -17,7 +17,7 @@ module.exports.createUser = (req, res) => {
 
   User.create({ name, about, avatar })
     .then((user) => res.send(user))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err}` }));
+    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
 };
 
 module.exports.updateUser = (req, res) => {
@@ -29,7 +29,7 @@ module.exports.updateUser = (req, res) => {
       runValidators: true,
     })
       .then((user) => res.send(user))
-      .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err}` }));
+      .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
   } else {
     res.status(400).send({ message: 'Запрос неверно сформирован' });
   }
@@ -44,7 +44,7 @@ module.exports.getUserAvatar = (req, res) => {
       runValidators: true,
     })
       .then((user) => res.send(user))
-      .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err}` }));
+      .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
   } else {
     res.status(400).send({ message: 'Запрос неверно сформирован' });
   }

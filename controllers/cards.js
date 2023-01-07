@@ -3,7 +3,7 @@ const Card = require('../models/card');
 module.exports.getCards = (req, res) => {
   Card.find({}).select(['-createdAt'])
     .then((card) => res.send(card))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err}` }));
+    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
 };
 
 module.exports.createCard = (req, res) => {
@@ -12,13 +12,13 @@ module.exports.createCard = (req, res) => {
 
   Card.create({ name, link, owner: _id }).select(['-createdAt'])
     .then((card) => res.send(card))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err}` }));
+    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
 };
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId).select(['-createdAt'])
     .then((card) => res.send(card))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err}` }));
+    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
 };
 
 module.exports.likeCard = (req, res) => {
@@ -28,7 +28,7 @@ module.exports.likeCard = (req, res) => {
     { new: true },
   ).select(['-createdAt'])
     .then((card) => res.send(card))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err}` }));
+    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
 };
 
 module.exports.dislikeCard = (req, res) => {
@@ -38,5 +38,5 @@ module.exports.dislikeCard = (req, res) => {
     { new: true },
   ).select(['-createdAt'])
     .then((card) => res.send(card))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err}` }));
+    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
 };
