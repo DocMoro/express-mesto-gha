@@ -10,7 +10,7 @@ module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
   const { _id } = req.user;
 
-  Card.create({ name, link, owner: _id }).select(['-createdAt'])
+  Card.create({ name, link, owner: _id })
     .then((card) => res.send(card))
     .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
 };
