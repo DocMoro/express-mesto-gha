@@ -1,54 +1,20 @@
 const router = require('express').Router();
-const User = require('../models/user');
+const {
+  getUsers,
+  getUserId,
+  createUser,
+  updateUser,
+  getUserAvatar,
+} = require('../controllers/users');
 
-router.get('/', (req, res) => {
-  User.find({})
-    .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err}` }));
-});
+router.get('/', getUsers);
 
-router.get('/:userId', (req, res) => {
-  User.findById(req.params.userId)
-    .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err}` }));
-});
+router.get('/:userId', getUserId);
 
-router.post('/', (req, res) => {
-  const { name, about, avatar } = req.body;
+router.post('/', createUser);
 
-  User.create({ name, about, avatar })
-    .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err}` }));
-});
+router.patch('/me', updateUser);
 
-router.patch('/me', (req, res) => {
-  const { _id } = req.user;
-
-  if (req.body.name || req.body.link) {
-    User.findByIdAndUpdate(_id, req.body, {
-      new: true,
-      runValidators: true,
-    })
-      .then((user) => res.send({ data: user }))
-      .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err}` }));
-  } else {
-    res.status(400).send({ message: 'Запрос неверно сформирован' });
-  }
-});
-
-router.patch('/me/avatar', (req, res) => {
-  const { _id } = req.user;
-
-  if (req.body.avatar) {
-    User.findByIdAndUpdate(_id, req.body, {
-      new: true,
-      runValidators: true,
-    })
-      .then((user) => res.send({ data: user }))
-      .catch((err) => res.status(500).send({ message: `Произошла ошибка ${err}` }));
-  } else {
-    res.status(400).send({ message: 'Запрос неверно сформирован' });
-  }
-});
+router.patch('/me/avatar', getUserAvatar);
 
 module.exports = router;
