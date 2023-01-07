@@ -3,7 +3,7 @@ const Card = require('../models/card');
 module.exports.getCards = (req, res) => {
   Card.find({}).select(['-createdAt'])
     .then((card) => res.send(card))
-    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
 module.exports.createCard = (req, res) => {
@@ -12,7 +12,14 @@ module.exports.createCard = (req, res) => {
 
   Card.create({ name, link, owner: _id })
     .then((card) => res.send(card))
-    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные' });
+        return;
+      }
+
+      res.status(500).send({ message: 'Произошла ошибка' });
+    });
 };
 
 module.exports.deleteCard = (req, res) => {
@@ -25,7 +32,7 @@ module.exports.deleteCard = (req, res) => {
 
       res.send(card);
     })
-    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
 module.exports.likeCard = (req, res) => {
@@ -42,7 +49,14 @@ module.exports.likeCard = (req, res) => {
 
       res.send(card);
     })
-    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные' });
+        return;
+      }
+
+      res.status(500).send({ message: 'Произошла ошибка' });
+    });
 };
 
 module.exports.dislikeCard = (req, res) => {
@@ -59,5 +73,12 @@ module.exports.dislikeCard = (req, res) => {
 
       res.send(card);
     })
-    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные' });
+        return;
+      }
+
+      res.status(500).send({ message: 'Произошла ошибка' });
+    });
 };

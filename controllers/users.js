@@ -3,7 +3,7 @@ const User = require('../models/user');
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((user) => res.send(user))
-    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
 module.exports.getUserId = (req, res) => {
@@ -16,7 +16,7 @@ module.exports.getUserId = (req, res) => {
 
       res.send(user);
     })
-    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
 module.exports.createUser = (req, res) => {
@@ -24,7 +24,14 @@ module.exports.createUser = (req, res) => {
 
   User.create({ name, about, avatar })
     .then((user) => res.send(user))
-    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные' });
+        return;
+      }
+
+      res.status(500).send({ message: 'Произошла ошибка' });
+    });
 };
 
 module.exports.updateUser = (req, res) => {
@@ -40,10 +47,17 @@ module.exports.updateUser = (req, res) => {
     runValidators: true,
   })
     .then((user) => res.send(user))
-    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные' });
+        return;
+      }
+
+      res.status(500).send({ message: 'Произошла ошибка' });
+    });
 };
 
-module.exports.getUserAvatar = (req, res) => {
+module.exports.updateUserAvatar = (req, res) => {
   const { _id } = req.user;
 
   if (req.body.name || req.body.link) {
@@ -56,5 +70,12 @@ module.exports.getUserAvatar = (req, res) => {
     runValidators: true,
   })
     .then((user) => res.send(user))
-    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные' });
+        return;
+      }
+
+      res.status(500).send({ message: 'Произошла ошибка' });
+    });
 };
