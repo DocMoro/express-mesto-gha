@@ -17,7 +17,14 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId).select(['-createdAt'])
-    .then((card) => res.send(card))
+    .then((card) => {
+      if (!card) {
+        res.status(404).send({ message: 'Удаляемая карточки не найдена' });
+        return;
+      }
+
+      res.send(card);
+    })
     .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
 };
 
@@ -27,7 +34,14 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   ).select(['-createdAt'])
-    .then((card) => res.send(card))
+    .then((card) => {
+      if (!card) {
+        res.status(404).send({ message: 'Удаляемая карточки не найдена' });
+        return;
+      }
+
+      res.send(card);
+    })
     .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
 };
 
@@ -37,6 +51,13 @@ module.exports.dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   ).select(['-createdAt'])
-    .then((card) => res.send(card))
+    .then((card) => {
+      if (!card) {
+        res.status(404).send({ message: 'Удаляемая карточки не найдена' });
+        return;
+      }
+
+      res.send(card);
+    })
     .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
 };

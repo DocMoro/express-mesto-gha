@@ -8,7 +8,14 @@ module.exports.getUsers = (req, res) => {
 
 module.exports.getUserId = (req, res) => {
   User.findById(req.params.userId)
-    .then((user) => res.send(user))
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'Запрашиваемый пользователь не найден' });
+        return;
+      }
+
+      res.send(user);
+    })
     .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
 };
 
