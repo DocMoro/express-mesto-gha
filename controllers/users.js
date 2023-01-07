@@ -23,29 +23,31 @@ module.exports.createUser = (req, res) => {
 module.exports.updateUser = (req, res) => {
   const { _id } = req.user;
 
-  if (req.body.name || req.body.link) {
-    User.findByIdAndUpdate(_id, req.body, {
-      new: true,
-      runValidators: true,
-    })
-      .then((user) => res.send(user))
-      .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
-  } else {
-    res.status(400).send({ message: 'Запрос неверно сформирован' });
+  if (req.body.avatar) {
+    res.status(404).send({ message: 'Запрос неверно сформирован' });
+    return;
   }
+
+  User.findByIdAndUpdate(_id, req.body, {
+    new: true,
+    runValidators: true,
+  })
+    .then((user) => res.send(user))
+    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
 };
 
 module.exports.getUserAvatar = (req, res) => {
   const { _id } = req.user;
 
-  if (req.body.avatar) {
-    User.findByIdAndUpdate(_id, req.body, {
-      new: true,
-      runValidators: true,
-    })
-      .then((user) => res.send(user))
-      .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
-  } else {
-    res.status(400).send({ message: 'Запрос неверно сформирован' });
+  if (req.body.name || req.body.link) {
+    res.status(404).send({ message: 'Запрос неверно сформирован' });
+    return;
   }
+
+  User.findByIdAndUpdate(_id, req.body, {
+    new: true,
+    runValidators: true,
+  })
+    .then((user) => res.send(user))
+    .catch((err) => res.status(400).send({ message: `Произошла ошибка ${err}` }));
 };
