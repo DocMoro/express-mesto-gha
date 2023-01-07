@@ -32,7 +32,7 @@ module.exports.deleteCard = (req, res) => {
 
       res.send(card);
     })
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(() => res.status(400).send({ message: 'Произошла ошибка' }));
 };
 
 module.exports.likeCard = (req, res) => {
@@ -49,14 +49,7 @@ module.exports.likeCard = (req, res) => {
 
       res.send(card);
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные' });
-        return;
-      }
-
-      res.status(500).send({ message: 'Произошла ошибка' });
-    });
+    .catch(() => res.status(400).send({ message: 'Произошла ошибка' }));
 };
 
 module.exports.dislikeCard = (req, res) => {
@@ -73,12 +66,5 @@ module.exports.dislikeCard = (req, res) => {
 
       res.send(card);
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные' });
-        return;
-      }
-
-      res.status(500).send({ message: 'Произошла ошибка' });
-    });
+    .catch(() => res.status(400).send({ message: 'Произошла ошибка' }));
 };

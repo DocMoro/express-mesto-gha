@@ -16,7 +16,7 @@ module.exports.getUserId = (req, res) => {
 
       res.send(user);
     })
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(() => res.status(400).send({ message: 'Произошла ошибка' }));
 };
 
 module.exports.createUser = (req, res) => {
