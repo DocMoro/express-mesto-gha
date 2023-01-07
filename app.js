@@ -4,6 +4,8 @@ const bobeParser = require('body-parser');
 
 const { PORT = 3000 } = process.env;
 
+const ERR_404 = 'Запрошен не существующий роут';
+
 const app = express();
 app.use(bobeParser.json());
 
@@ -24,7 +26,7 @@ app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
 app.use('/', (req, res) => {
-  res.status(404).send({ message: 'Некоректный путь запроса' });
+  res.status(404).send({ message: ERR_404 });
 });
 
 app.listen(PORT, () => {
