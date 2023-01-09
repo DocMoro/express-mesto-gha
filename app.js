@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bobeParser = require('body-parser');
 
 const { PORT = 3000 } = process.env;
+const { login, createUser } = require('./controllers/users');
 
 const ERR_404 = 'Запрошен не существующий роут';
 
@@ -13,16 +14,10 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '63b82f41a9462782b465d448',
-  };
-
-  next();
-});
+app.post('/signin', login);
+app.post('/signup', createUser);
 
 app.use('/users', require('./routes/users'));
-
 app.use('/cards', require('./routes/cards'));
 
 app.use('/', (req, res) => {
