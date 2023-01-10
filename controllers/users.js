@@ -23,7 +23,7 @@ module.exports.getUserProfile = (req, res) => {
         return;
       }
 
-      res.status(500).send(err);
+      res.status(500).send(req.user._id);
     });
 };
 
