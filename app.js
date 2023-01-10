@@ -28,7 +28,7 @@ app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
 app.use('/', (req, res) => {
-  return next(new Error404(ERR_404));
+  next(new Error404(ERR_404));
 });
 
 app.use((err, req, res, next) => {

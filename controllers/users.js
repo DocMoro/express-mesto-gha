@@ -22,10 +22,10 @@ module.exports.getUserProfile = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new Error400(ERR_400));
+        next(new Error400(ERR_400));
       }
 
-      return next(err);
+      next(err);
     });
 };
 
@@ -46,10 +46,10 @@ module.exports.getUserId = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new Error400(ERR_400));
+        next(new Error400(ERR_400));
       }
 
-      return next(err);
+      next(err);
     });
 };
 
@@ -66,10 +66,10 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return next(new Error400(ERR_400));
+        next(new Error400(ERR_400));
       }
 
-      return next(err);
+      next(err);
     });
 };
 
@@ -77,7 +77,7 @@ module.exports.updateUser = (req, res) => {
   const { _id } = req.user;
 
   if (req.body.avatar) {
-    return next(new Error400(ERR_400));
+    next(new Error400(ERR_400));
   }
 
   User.findByIdAndUpdate(_id, req.body, {
@@ -87,10 +87,10 @@ module.exports.updateUser = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return next(new Error400(ERR_400));
+        next(new Error400(ERR_400));
       }
 
-      return next(err);
+      next(err);
     });
 };
 
@@ -98,7 +98,7 @@ module.exports.updateUserAvatar = (req, res) => {
   const { _id } = req.user;
 
   if (req.body.name || req.body.link) {
-    return next(new Error400(ERR_400));
+    next(new Error400(ERR_400));
   }
 
   User.findByIdAndUpdate(_id, req.body, {
@@ -108,10 +108,10 @@ module.exports.updateUserAvatar = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return next(new Error400(ERR_400));
+        next(new Error400(ERR_400));
       }
 
-      return next(err);
+      next(err);
     });
 };
 
