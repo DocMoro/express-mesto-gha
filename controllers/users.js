@@ -23,7 +23,7 @@ module.exports.getUserProfile = (req, res) => {
         return;
       }
 
-      res.status(500).send({ message: ERR_500 });
+      res.status(500).send(err);
     });
 };
 
