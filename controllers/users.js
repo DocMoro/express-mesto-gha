@@ -25,7 +25,7 @@ module.exports.getUserProfile = (req, res) => {
 
       res.status(500).send({ message: ERR_500 });
     });
-}
+};
 
 module.exports.getUsers = (req, res) => {
   User.find({})
