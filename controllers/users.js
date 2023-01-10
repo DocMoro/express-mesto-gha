@@ -13,7 +13,7 @@ const ERR_401 = 'Неправильные почта или пароль';
 const ERR_400 = 'Переданы некорректные данные';
 const ERR_409 = 'Пользователь с данным email уже существует';
 
-module.exports.getUserProfile = (req, res) => {
+module.exports.getUserProfile = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
@@ -31,13 +31,13 @@ module.exports.getUserProfile = (req, res) => {
     });
 };
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((user) => res.send(user))
     .catch(next);
 };
 
-module.exports.getUserId = (req, res) => {
+module.exports.getUserId = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
@@ -55,12 +55,12 @@ module.exports.getUserId = (req, res) => {
     });
 };
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const { password } = req.body;
 
   User.findOne({ email: req.user._id })
-    .then((user) => {
-      if(!user) {
+    .then((matched) => {
+      if (matched) {
         throw new Error409(ERR_409);
       }
 
@@ -83,7 +83,7 @@ module.exports.createUser = (req, res) => {
     .catch(next);
 };
 
-module.exports.updateUser = (req, res) => {
+module.exports.updateUser = (req, res, next) => {
   const { _id } = req.user;
 
   if (req.body.avatar) {
@@ -104,7 +104,7 @@ module.exports.updateUser = (req, res) => {
     });
 };
 
-module.exports.updateUserAvatar = (req, res) => {
+module.exports.updateUserAvatar = (req, res, next) => {
   const { _id } = req.user;
 
   if (req.body.name || req.body.link) {
@@ -125,7 +125,7 @@ module.exports.updateUserAvatar = (req, res) => {
     });
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)

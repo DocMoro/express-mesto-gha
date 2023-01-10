@@ -27,7 +27,7 @@ app.use(auth);
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-app.use('/', (req, res) => {
+app.use('/', (req, res, next) => {
   next(new Error404(ERR_404));
 });
 
@@ -39,7 +39,7 @@ app.use((err, req, res, next) => {
     .send({
       message: statusCode === 500
         ? ERR_500
-        : message
+        : message,
     });
 });
 

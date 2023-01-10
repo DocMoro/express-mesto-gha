@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
-const Error401 = require('../errors/error-401')
+const Error401 = require('../errors/error-401');
 
 const ERR_401 = 'Неправильные почта или пароль';
 const ERR_400 = 'Переданы некорректные данные';

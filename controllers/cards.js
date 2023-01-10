@@ -8,13 +8,13 @@ const ERR_404 = 'Ресурс по запрашиваемому _id не най�
 const ERR_400 = 'Переданы некорректные данные';
 const ERR_403 = 'Нет прав для удаления ресурса';
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({}).select(['-createdAt'])
     .then((card) => res.send(card))
     .catch(next);
 };
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const { _id } = req.user;
 
@@ -29,14 +29,14 @@ module.exports.createCard = (req, res) => {
     });
 };
 
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId).select(['-createdAt'])
     .then((card) => {
       if (!card) {
         throw new Error404(ERR_404);
       }
 
-      if(card.owner !== req.user._id) {
+      if (card.owner !== req.user._id) {
         throw new Error403(ERR_403);
       }
 
@@ -51,7 +51,7 @@ module.exports.deleteCard = (req, res) => {
     });
 };
 
-module.exports.likeCard = (req, res) => {
+module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
@@ -73,7 +73,7 @@ module.exports.likeCard = (req, res) => {
     });
 };
 
-module.exports.dislikeCard = (req, res) => {
+module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
