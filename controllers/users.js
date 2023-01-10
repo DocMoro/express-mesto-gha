@@ -7,6 +7,26 @@ const ERR_500 = 'На сервере произошла ошибка';
 const ERR_404 = 'Ресурс по запрашиваемому _id не найден';
 const ERR_400 = 'Переданы некорректные данные';
 
+module.exports.getUserProfile = (req, res) => {
+  User.findOne(req.user._id)
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: ERR_404 });
+        return;
+      }
+
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: ERR_400 });
+        return;
+      }
+
+      res.status(500).send({ message: ERR_500 });
+    });
+}
+
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((user) => res.send(user))
