@@ -4,8 +4,7 @@ const bcrypt = require('bcryptjs');
 
 const Error401 = require('../errors/error-401');
 
-const ERR_401 = 'Неправильные почта или пароль';
-const ERR_400 = 'Переданы некорректные данные';
+const { ERR_400, ERR_401 } = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
   email: {

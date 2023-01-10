@@ -8,10 +8,7 @@ const Error401 = require('../errors/error-401');
 const Error400 = require('../errors/error-400');
 const Error409 = require('../errors/error-409');
 
-const ERR_404 = 'Ресурс по запрашиваемому _id не найден';
-const ERR_401 = 'Неправильные почта или пароль';
-const ERR_400 = 'Переданы некорректные данные';
-const ERR_409 = 'Пользователь с данным email уже существует';
+const { ERR_404, ERR_400, ERR_401, ERR_409 } = require('../utils/constants');
 
 module.exports.getUserProfile = (req, res, next) => {
   User.findById(req.user._id)

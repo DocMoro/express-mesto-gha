@@ -4,9 +4,7 @@ const Error404 = require('../errors/error-404');
 const Error400 = require('../errors/error-400');
 const Error403 = require('../errors/error-403');
 
-const ERR_404 = 'Ресурс по запрашиваемому _id не найден';
-const ERR_400 = 'Переданы некорректные данные';
-const ERR_403 = 'Нет прав для удаления ресурса';
+const { ERR_404, ERR_400, ERR_403 } = require('../utils/constants');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({}).select(['-createdAt'])

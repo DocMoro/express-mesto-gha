@@ -10,9 +10,7 @@ const auth = require('./middlewares/auth');
 
 const Error404 = require('./errors/error-404');
 
-const ERR_500 = 'На сервере произошла ошибка';
-const ERR_404 = 'Запрошен не существующий роут';
-const url = /^https*:\/\/(www\.)*[\w-.~:\/?#[\]@!$&'()*\+,;=]{1,}$/;
+const { ERR_500, ERR_404, URL } = require('./utils/constants');
 
 const app = express();
 app.use(bobeParser.json());
@@ -34,7 +32,7 @@ app.post('/signup', celebrate({
     password: Joi.string().required().min(8),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(url),
+    avatar: Joi.string().regex(URL),
   })
 }), createUser);
 

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const ERR_401 = 'Необходима авторизация';
+const { ERR_401 } = require('../utils/constants');
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
