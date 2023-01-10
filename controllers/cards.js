@@ -2,9 +2,11 @@ const Card = require('../models/card');
 
 const Error404 = require('../errors/error-404');
 const Error400 = require('../errors/error-400');
+const Error403 = require('../errors/error-403');
 
 const ERR_404 = 'Ресурс по запрашиваемому _id не найден';
 const ERR_400 = 'Переданы некорректные данные';
+const ERR_403 = 'Нет прав для удаления ресурса';
 
 module.exports.getCards = (req, res) => {
   Card.find({}).select(['-createdAt'])
@@ -32,6 +34,10 @@ module.exports.deleteCard = (req, res) => {
     .then((card) => {
       if (!card) {
         throw new Error404(ERR_404);
+      }
+
+      if(card.owner !== req.user._id) {
+        throw new Error403(ERR_403);
       }
 
       res.send(card);

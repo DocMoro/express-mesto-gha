@@ -6,13 +6,15 @@ const User = require('../models/user');
 const Error404 = require('../errors/error-404');
 const Error401 = require('../errors/error-401');
 const Error400 = require('../errors/error-400');
+const Error409 = require('../errors/error-409');
 
 const ERR_404 = 'Ресурс по запрашиваемому _id не найден';
 const ERR_401 = 'Неправильные почта или пароль';
 const ERR_400 = 'Переданы некорректные данные';
+const ERR_409 = 'Пользователь с данным email уже существует';
 
 module.exports.getUserProfile = (req, res) => {
-  User.findOne(req.user._id)
+  User.findById(req.user._id)
     .then((user) => {
       if (!user) {
         throw new Error404(ERR_404);
@@ -56,21 +58,29 @@ module.exports.getUserId = (req, res) => {
 module.exports.createUser = (req, res) => {
   const { password } = req.body;
 
-  bcrypt.hash(password, 10)
-    .then((hash) => {
-      User.create({
-        ...req.body,
-        password: hash,
-      });
-    })
-    .then((user) => res.send(user))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new Error400(ERR_400));
+  User.findOne({ email: req.user._id })
+    .then((user) => {
+      if(!user) {
+        throw new Error409(ERR_409);
       }
 
-      next(err);
-    });
+      bcrypt.hash(password, 10)
+        .then((hash) => {
+          User.create({
+            ...req.body,
+            password: hash,
+          });
+        })
+        .then((user) => res.send(user))
+        .catch((err) => {
+          if (err.name === 'ValidationError') {
+            next(new Error400(ERR_400));
+          }
+
+          next(err);
+        });
+    })
+    .catch(next);
 };
 
 module.exports.updateUser = (req, res) => {
