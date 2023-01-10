@@ -36,8 +36,8 @@ module.exports.deleteCard = (req, res, next) => {
         throw new Error404(ERR_404);
       }
 
-      if (card.owner !== req.user._id) {
-        throw new Error403(card.owner + req.user._id);
+      if (card.owner + '' !== req.user._id + '') {
+        throw new Error403(ERR_403);
       }
 
       res.send(card);
