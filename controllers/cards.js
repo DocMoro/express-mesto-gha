@@ -20,10 +20,10 @@ module.exports.createCard = (req, res) => {
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new Error400(ERR_400));
+        return next(new Error400(ERR_400));
       }
 
-      next(err);
+      return next(err);
     });
 };
 
@@ -38,10 +38,10 @@ module.exports.deleteCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new Error400(ERR_400));
+        return next(new Error400(ERR_400));
       }
 
-      next(err);
+      return next(err);
     });
 };
 
@@ -60,10 +60,10 @@ module.exports.likeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new Error400(ERR_400));
+        return next(new Error400(ERR_400));
       }
 
-      next(err);
+      return next(err);
     });
 };
 
@@ -82,9 +82,9 @@ module.exports.dislikeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new Error400(ERR_400));
+        return next(new Error400(ERR_400));
       }
 
-      next(err);
+      return next(err);
     });
 };
