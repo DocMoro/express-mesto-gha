@@ -1,5 +1,8 @@
 const Card = require('../models/card');
 
+const Error404 = require('../errors/error-404');
+const Error400 = require('../errors/error-400');
+
 const ERR_404 = 'Ресурс по запрашиваемому _id не найден';
 const ERR_400 = 'Переданы некорректные данные';
 
@@ -17,7 +20,7 @@ module.exports.createCard = (req, res) => {
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new Error_400(ERR_400));
+        next(new Error400(ERR_400));
       }
 
       next(err);
@@ -28,14 +31,14 @@ module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId).select(['-createdAt'])
     .then((card) => {
       if (!card) {
-        throw new Error_404(ERR_404);
+        throw new Error404(ERR_404);
       }
 
       res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new Error_400(ERR_400));
+        next(new Error400(ERR_400));
       }
 
       next(err);
@@ -50,14 +53,14 @@ module.exports.likeCard = (req, res) => {
   ).select(['-createdAt'])
     .then((card) => {
       if (!card) {
-        throw new Error_404(ERR_404);
+        throw new Error404(ERR_404);
       }
 
       res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new Error_400(ERR_400));
+        next(new Error400(ERR_400));
       }
 
       next(err);
@@ -72,14 +75,14 @@ module.exports.dislikeCard = (req, res) => {
   ).select(['-createdAt'])
     .then((card) => {
       if (!card) {
-        throw new Error_404(ERR_404);
+        throw new Error404(ERR_404);
       }
 
       res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new Error_400(ERR_400));
+        next(new Error400(ERR_400));
       }
 
       next(err);
