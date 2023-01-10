@@ -41,6 +41,8 @@ app.use('/', (req, res, next) => {
   next(new Error404(ERR_404));
 });
 
+app.use(errors());
+
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
 
