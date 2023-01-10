@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bobeParser = require('body-parser');
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 
 const { PORT = 3000 } = process.env;
 
