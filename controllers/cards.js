@@ -1,13 +1,12 @@
 const Card = require('../models/card');
 
-const ERR_500 = 'На сервере произошла ошибка';
 const ERR_404 = 'Ресурс по запрашиваемому _id не найден';
 const ERR_400 = 'Переданы некорректные данные';
 
 module.exports.getCards = (req, res) => {
   Card.find({}).select(['-createdAt'])
     .then((card) => res.send(card))
-    .catch(() => res.status(500).send({ message: ERR_500 }));
+    .catch(next);
 };
 
 module.exports.createCard = (req, res) => {
@@ -18,11 +17,10 @@ module.exports.createCard = (req, res) => {
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: ERR_400 });
-        return;
+        next(new Error_400(ERR_400));
       }
 
-      res.status(500).send({ message: ERR_500 });
+      next(err);
     });
 };
 
@@ -30,19 +28,17 @@ module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId).select(['-createdAt'])
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: ERR_404 });
-        return;
+        throw new Error_404(ERR_404);
       }
 
       res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: ERR_400 });
-        return;
+        next(new Error_400(ERR_400));
       }
 
-      res.status(500).send({ message: ERR_500 });
+      next(err);
     });
 };
 
@@ -54,19 +50,17 @@ module.exports.likeCard = (req, res) => {
   ).select(['-createdAt'])
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: ERR_404 });
-        return;
+        throw new Error_404(ERR_404);
       }
 
       res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: ERR_400 });
-        return;
+        next(new Error_400(ERR_400));
       }
 
-      res.status(500).send({ message: ERR_500 });
+      next(err);
     });
 };
 
@@ -78,18 +72,16 @@ module.exports.dislikeCard = (req, res) => {
   ).select(['-createdAt'])
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: ERR_404 });
-        return;
+        throw new Error_404(ERR_404);
       }
 
       res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: ERR_400 });
-        return;
+        next(new Error_400(ERR_400));
       }
 
-      res.status(500).send({ message: ERR_500 });
+      next(err);
     });
 };

@@ -3,53 +3,53 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
-const ERR_500 = 'На сервере произошла ошибка';
+const Error_404 = require('../errors/error-404');
+const Error_401 = require('../errors/error-401');
+const Error_400 = require('../errors/error-400');
+
 const ERR_404 = 'Ресурс по запрашиваемому _id не найден';
+const ERR_401 = 'Неправильные почта или пароль';
 const ERR_400 = 'Переданы некорректные данные';
 
 module.exports.getUserProfile = (req, res) => {
   User.findOne(req.user._id)
     .then((user) => {
       if (!user) {
-        res.status(404).send({ message: ERR_404 });
-        return;
+        throw new Error_404(ERR_404);
       }
 
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: ERR_400 });
-        return;
+        next(new Error_400(ERR_400));
       }
 
-      res.status(500).send(req.user._id);
+      next(err);
     });
 };
 
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((user) => res.send(user))
-    .catch(() => res.status(500).send({ message: ERR_500 }));
+    .catch(next);
 };
 
 module.exports.getUserId = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        res.status(404).send({ message: ERR_404 });
-        return;
+        throw new Error_404(ERR_404);
       }
 
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: ERR_400 });
-        return;
+        next(new Error_400(ERR_400));
       }
 
-      res.status(500).send({ message: ERR_500 });
+      next(err);
     });
 };
 
@@ -66,11 +66,10 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: ERR_400 });
-        return;
+        next(new Error_400(ERR_400));
       }
 
-      res.status(500).send({ message: ERR_500 });
+      next(err);
     });
 };
 
@@ -78,8 +77,7 @@ module.exports.updateUser = (req, res) => {
   const { _id } = req.user;
 
   if (req.body.avatar) {
-    res.status(400).send({ message: ERR_400 });
-    return;
+    next(new Error_400(ERR_400));
   }
 
   User.findByIdAndUpdate(_id, req.body, {
@@ -89,11 +87,10 @@ module.exports.updateUser = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: ERR_400 });
-        return;
+        next(new Error_400(ERR_400));
       }
 
-      res.status(500).send({ message: ERR_500 });
+      next(err);
     });
 };
 
@@ -101,8 +98,7 @@ module.exports.updateUserAvatar = (req, res) => {
   const { _id } = req.user;
 
   if (req.body.name || req.body.link) {
-    res.status(400).send({ message: ERR_400 });
-    return;
+    next(new Error_400(ERR_400));
   }
 
   User.findByIdAndUpdate(_id, req.body, {
@@ -112,11 +108,10 @@ module.exports.updateUserAvatar = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: ERR_400 });
-        return;
+        next(new Error_400(ERR_400));
       }
 
-      res.status(500).send({ message: ERR_500 });
+      next(err);
     });
 };
 
@@ -129,9 +124,5 @@ module.exports.login = (req, res) => {
 
       res.send({ token });
     })
-    .catch((err) => {
-      res
-        .status(401)
-        .send({ message: err.message });
-    });
+    .catch(() => next(new Error_401(ERR_401)));
 };

@@ -6,7 +6,9 @@ const { PORT = 3000 } = process.env;
 
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const Error_404 = require('./errors/error-404');
 
+const ERR_500 = 'На сервере произошла ошибка';
 const ERR_404 = 'Запрошен не существующий роут';
 
 const app = express();
@@ -25,7 +27,19 @@ app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
 app.use('/', (req, res) => {
-  res.status(404).send({ message: ERR_404 });
+  next(new Error_404(ERR_404));
+});
+
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+
+  res
+    .status(statusCode)
+    .send({
+      message: statusCode === 500
+        ? ERR_500
+        : message
+    });
 });
 
 app.listen(PORT, () => {
