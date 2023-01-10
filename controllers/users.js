@@ -58,29 +58,25 @@ module.exports.getUserId = (req, res, next) => {
 module.exports.createUser = (req, res, next) => {
   const { password } = req.body;
 
-  User.findOne({ email: req.user._id })
-    .then((matched) => {
-      if (matched) {
-        throw new Error409(ERR_409);
+  bcrypt.hash(password, 10)
+    .then((hash) => {
+      User.create({
+        ...req.body,
+        password: hash,
+      });
+    })
+    .then((user) => res.send(user))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new Error400(ERR_400));
       }
 
-      bcrypt.hash(password, 10)
-        .then((hash) => {
-          User.create({
-            ...req.body,
-            password: hash,
-          });
-        })
-        .then((user) => res.send(user))
-        .catch((err) => {
-          if (err.name === 'ValidationError') {
-            next(new Error400(ERR_400));
-          }
+      if (err.code === 11000) {
+        next(new Error409(ERR_409));
+      }
 
-          next(err);
-        });
-    })
-    .catch(next);
+      next(err);
+    });
 };
 
 module.exports.updateUser = (req, res, next) => {
