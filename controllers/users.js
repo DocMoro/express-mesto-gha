@@ -4,11 +4,10 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const Error404 = require('../errors/error-404');
-const Error401 = require('../errors/error-401');
 const Error400 = require('../errors/error-400');
 const Error409 = require('../errors/error-409');
 
-const { ERR_404, ERR_400, ERR_401, ERR_409 } = require('../utils/constants');
+const { ERR_404, ERR_400, ERR_409 } = require('../utils/constants');
 
 module.exports.getUserProfile = (req, res, next) => {
   User.findById(req.user._id)
@@ -24,7 +23,7 @@ module.exports.getUserProfile = (req, res, next) => {
         return next(new Error400(ERR_400));
       }
 
-      next(err);
+      return next(err);
     });
 };
 
@@ -48,7 +47,7 @@ module.exports.getUserId = (req, res, next) => {
         return next(new Error400(ERR_400));
       }
 
-      next(err);
+      return next(err);
     });
 };
 
@@ -75,7 +74,7 @@ module.exports.createUser = (req, res, next) => {
         return next(new Error409(ERR_409));
       }
 
-      next(err);
+      return next(err);
     });
 };
 
@@ -95,7 +94,7 @@ module.exports.updateUser = (req, res, next) => {
         return next(new Error400(ERR_400));
       }
 
-      next(err);
+      return next(err);
     });
 };
 
@@ -114,7 +113,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
         return next(new Error400(ERR_400));
       }
 
-      next(err);
+      return next(err);
     });
 };
 
