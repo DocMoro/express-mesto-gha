@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 
 const Error401 = require('../errors/error-401');
 
-const { ERR_400, ERR_401 } = require('../utils/constants');
+const { ERR_400, ERR_401, URL } = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -38,6 +38,12 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    validate: {
+      validator(v) {
+        return URL.test(v);
+      },
+      message: ERR_400,
+    },
   },
 }, {
   versionKey: false,
