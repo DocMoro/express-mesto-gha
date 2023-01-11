@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const { URL } = require('../utils/constants');
+const { ERR_400, URL } = require('../utils/constants');
 
 const cardSchema = new mongoose.Schema({
   name: {
