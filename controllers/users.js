@@ -21,7 +21,7 @@ module.exports.getUserProfile = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new Error400(ERR_400));
+        return next(new Error400(ERR_400));
       }
 
       next(err);
@@ -45,7 +45,7 @@ module.exports.getUserId = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new Error400(ERR_400));
+        return next(new Error400(ERR_400));
       }
 
       next(err);
@@ -68,11 +68,11 @@ module.exports.createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new Error400(ERR_400));
+        return next(new Error400(ERR_400));
       }
 
       if (err.code === 11000) {
-        next(new Error409(ERR_409));
+        return next(new Error409(ERR_409));
       }
 
       next(err);
@@ -82,18 +82,17 @@ module.exports.createUser = (req, res, next) => {
 module.exports.updateUser = (req, res, next) => {
   const { _id } = req.user;
 
-  if (req.body.avatar) {
-    next(new Error400(ERR_400));
-  }
-
-  User.findByIdAndUpdate(_id, req.body, {
+  User.findByIdAndUpdate(_id, {
+    name: req.body.name,
+    about: req.body.about,
+  }, {
     new: true,
     runValidators: true,
   })
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new Error400(ERR_400));
+        return next(new Error400(ERR_400));
       }
 
       next(err);
@@ -103,18 +102,16 @@ module.exports.updateUser = (req, res, next) => {
 module.exports.updateUserAvatar = (req, res, next) => {
   const { _id } = req.user;
 
-  if (req.body.name || req.body.link) {
-    next(new Error400(ERR_400));
-  }
-
-  User.findByIdAndUpdate(_id, req.body, {
+  User.findByIdAndUpdate(_id, {
+    avatar: req.body.avatar,
+  }, {
     new: true,
     runValidators: true,
   })
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new Error400(ERR_400));
+        return next(new Error400(ERR_400));
       }
 
       next(err);
@@ -130,5 +127,5 @@ module.exports.login = (req, res, next) => {
 
       res.send({ token });
     })
-    .catch(() => next(new Error401(ERR_401)));
+    .catch(next);
 };

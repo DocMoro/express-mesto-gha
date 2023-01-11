@@ -20,7 +20,7 @@ module.exports.createCard = (req, res, next) => {
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new Error400(ERR_400));
+        return next(new Error400(ERR_400));
       }
 
       next(err);
@@ -28,7 +28,7 @@ module.exports.createCard = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId).select(['-createdAt'])
+  Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
         throw new Error404(ERR_404);
@@ -38,11 +38,12 @@ module.exports.deleteCard = (req, res, next) => {
         throw new Error403(ERR_403);
       }
 
-      res.send(card);
+      return Card.findByIdAndRemove(req.params.cardId).select(['-createdAt']);
     })
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new Error400(ERR_400));
+        return next(new Error400(ERR_400));
       }
 
       next(err);
@@ -64,7 +65,7 @@ module.exports.likeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new Error400(ERR_400));
+        return next(new Error400(ERR_400));
       }
 
       next(err);
@@ -86,7 +87,7 @@ module.exports.dislikeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new Error400(ERR_400));
+        return next(new Error400(ERR_400));
       }
 
       next(err);
