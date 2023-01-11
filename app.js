@@ -22,14 +22,14 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
   })
 }), login);
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().regex(URL),
@@ -46,6 +46,8 @@ app.use('/', (req, res, next) => {
 });
 
 app.use(errors());
+
+/* eslint no-unused-vars: ["error", { "args": "none" }] */
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
