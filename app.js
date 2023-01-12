@@ -7,6 +7,7 @@ const { PORT = 3000 } = process.env;
 
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const Error404 = require('./errors/error-404');
 
@@ -18,6 +19,8 @@ app.use(bobeParser.json());
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
+
+app.use(requestLogger);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -44,6 +47,8 @@ app.use('/cards', require('./routes/cards'));
 app.use('/', (req, res, next) => {
   next(new Error404(ERR_404));
 });
+
+app.use(errorLogger);
 
 app.use(errors());
 
