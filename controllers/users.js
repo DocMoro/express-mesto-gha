@@ -9,6 +9,8 @@ const Error409 = require('../errors/error-409');
 
 const { ERR_404, ERR_400, ERR_409 } = require('../utils/constants');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 module.exports.getUserProfile = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
@@ -122,7 +124,10 @@ module.exports.login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key');
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+      );
 
       res.send({ token });
     })
